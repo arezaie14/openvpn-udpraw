@@ -12,7 +12,6 @@ Change .env file as your needed:
 SERVER_ADDRESS= 12.34.56.78 //The server ip with global internet access
 SERVER_PORT=1234            //The port that you need to expose it should below 65535
 PASSWORD="pass123"          //The password for safe tunnel it can be every thing
-CLIENT_ADDRESS=44.33.55.11  //The server to tunnel with inside country 
 SUBNET=10.5.0.0             //internal subnet of docker.  ***optional
 GATEWAY=10.5.0.1            //internal gateway of docker. ***optional 
 UDP_SPEEDER_IP=10.5.0.4     //udp_speeder internal ip.    ***optional
