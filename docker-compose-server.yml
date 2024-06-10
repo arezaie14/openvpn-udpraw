@@ -1,0 +1,60 @@
+version: "2.1"
+services:
+  openvpn:
+    image: openvpn/openvpn-as
+    container_name: openvpn
+    cap_add:
+      - NET_ADMIN
+    env_file:
+      - ./.env
+    ports:
+      - "943:943"
+      - "443:443"
+    volumes:
+      - ./data:/openvpn
+    sysctls:
+      - net.ipv4.conf.default.forwarding=1
+      - net.ipv4.conf.all.forwarding=1
+      - net.ipv6.conf.default.forwarding=1
+      - net.ipv6.conf.all.forwarding=1
+    restart: always
+    networks:
+      ovpn:
+        ipv4_address: ${OVPN_IP}
+  udpraw:
+    env_file:
+      - ./.env
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE 
+    depends_on:
+      - openvpn
+    build: .
+    image: udp-speeder
+    restart: always
+    privileged: true
+    network_mode: host
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}/udp"
+    command: ./udp2raw_amd64 -s -l 0.0.0.0:${SERVER_PORT} -r ${UDP_SPEEDER_IP}:4444 --raw-mode icmp -k "${PASSWORD}" -a
+  udp-speeder:
+    env_file:
+      - ./.env
+    depends_on:
+      - udpraw
+    build: .
+    image: udp-speeder
+    restart: always
+    expose:
+      - "4444/udp"
+    networks:
+      ovpn:
+        ipv4_address: ${UDP_SPEEDER_IP}
+    command: ./speederv2_amd64 -s -l 0.0.0.0:4444 -r ${OVPN_IP}:1194  -f20:10 -k "${PASSWORD}"
+networks:
+  ovpn:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: ${SUBNET}/16
+         gateway: ${GATEWAY}
