@@ -24,6 +24,7 @@ Clone project:
 ```c++
 git clone git@github.com:arezaie14/openvpn-udpraw.git
 cd ./openvpn-udpraw
+docker build -t udp-speeder .
 chmod +x ./server.run.sh
 ./server.run.sh
 ```
