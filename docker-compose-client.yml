@@ -17,7 +17,7 @@ services:
     sysctls:
       - net.ipv4.conf.default.forwarding=1
       - net.ipv4.conf.all.forwarding=1
-    command: ./udp2raw_amd64 -c -l0.0.0.0:4444 -r ${SERVER_ADDRESS}:${SERVER_PORT} --raw-mode  icmp -k "${PASSWORD}" -a
+    command: ./udp2raw_amd64 -c -l0.0.0.0:4444 -r ${SERVER_ADDRESS}:${SERVER_PORT} --raw-mode "${SERVER_MODE}" -k "${PASSWORD}" -a
   udp-speeder:
     env_file:
       - ./.env
@@ -25,7 +25,7 @@ services:
     image: udp-speeder
     restart: always
     ports:
-      - "${SERVER_PORT}:4444/udp"
+      - "${OVPN_PORT}:4444/udp"
     networks:
       ovpn:
         ipv4_address: ${UDP_SPEEDER_IP}
