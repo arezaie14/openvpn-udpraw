@@ -7,7 +7,7 @@ services:
       - udp-speeder
     build: .
     expose:
-      - "4444/udp"
+      - "4444"
     image: udp-speeder
     restart: always
     privileged: true
@@ -25,7 +25,7 @@ services:
     image: udp-speeder
     restart: always
     ports:
-      - "${OVPN_PORT}:4444/udp"
+      - "${OVPN_PORT}:4444"
     networks:
       ovpn:
         ipv4_address: ${UDP_SPEEDER_IP}
